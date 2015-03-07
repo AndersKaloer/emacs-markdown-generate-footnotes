@@ -20,11 +20,18 @@
     (if (equal "" (match-string 2))
         (progn ;; Id not provided
           (push (cons footnote-count (match-string 3)) footnote-text-list)
-          (replace-match (number-to-string footnote-count) nil nil nil 1)
+          (replace-match
+           (format "[%d](#footnote-%d)"
+                   footnote-count footnote-count)
+           nil nil nil 1)
           (setq footnote-count (1+ footnote-count)))
       (progn ;; Id provided
         (if (assoc (match-string 2) footnote-ids-list)
-            (replace-match (number-to-string (cdr (assoc (match-string 2) footnote-ids-list))) nil nil nil 1)
+            (replace-match 
+           (format "[%d](#footnote-%d)"
+                   (cdr (assoc (match-string 2) footnote-ids-list))
+                   (cdr (assoc (match-string 2) footnote-ids-list)))
+           nil nil nil 1)
           (progn
             (push (cons footnote-count (match-string 3)) footnote-text-list) ; Add to list
             (push (cons (match-string 2) footnote-count) footnote-ids-list)
@@ -38,5 +45,6 @@
   (newline)
   (dolist (elm (reverse footnote-text-list))
     (progn
-      (insert (format "\\[%d\\]: %s  " (car elm) (cdr elm))) ;; Two trailing spaces causes line break
+      (insert (format "<a name=\"footnote-%d\"></a>\\[%d\\]: %s  " ;; Two trailing spaces causes line break
+                      (car elm) (car elm) (cdr elm)))
       (newline))))

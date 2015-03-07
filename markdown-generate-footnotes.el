@@ -38,5 +38,5 @@
   (newline)
   (dolist (elm (reverse footnote-text-list))
     (progn
-      (insert (format "[%d]: %s" (car elm) (cdr elm)))
+      (insert (format "\\[%d\\]: %s  " (car elm) (cdr elm))) ;; Two trailing spaces causes line break
       (newline))))
